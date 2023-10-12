@@ -9,15 +9,15 @@ import java.util.Date;
 public class Member {
     @Id
     @GeneratedValue
-    Long id;
+    private Long id;
     @Column(name = "name")
-    String name;
+    private String name;
     @Column(name = "address")
-    String address;
+    private String address;
     @Column(name = "date-of-membership")
-    Date dateOfMembership;
+    private Date dateOfMembership;
     @Column(name = "max-book-limit")
-    int maxBookLimit;
+    private int maxBookLimit;
 
     public Member(Long id, String name, String address, Date dateOfMembership, int maxBookLimit) {
         this.id = id;

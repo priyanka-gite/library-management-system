@@ -34,7 +34,7 @@ public class Book {
     }
 
     public int getIsbn() {
-        return isbn;
+        return this.isbn;
     }
 
     public void setIsbn(int isbn) {
