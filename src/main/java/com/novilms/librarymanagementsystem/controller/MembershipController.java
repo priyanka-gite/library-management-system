@@ -1,4 +1,4 @@
 package com.novilms.librarymanagementsystem.controller;
 
-public class LibraryDatabaseController {
+public class MembershipController {
 }

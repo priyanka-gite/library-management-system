@@ -5,15 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReservationDto {
+public class AuthorDto {
     private Long id;
-    private Date reserveDate;
-    private Date returnDate;
-    private  Boolean isReturned;
+    private String name;
+    private String gender;
+    private String email;
 }

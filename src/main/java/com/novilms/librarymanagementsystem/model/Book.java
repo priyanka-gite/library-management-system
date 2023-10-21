@@ -1,72 +1,41 @@
 package com.novilms.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "books")
 public class Book {
     @Id
     @GeneratedValue
-    Long id;
+    private Long id;
     @Column(name = "title")
-    String title;
-    @Column(name = "author")
-    String author;
+    private String title;
+    @Column(name = "category")
+    private String category;
+    @Column(name = "is_borrowed")
+    private Boolean isBorrowed;
+    @Column(name = "number_of_copies")
+    private int numberOfCopies;
     @Column(name = "isbn" )
-    int isbn;
-    @Column(name = "publication")
-    String publication;
+    private int isbn;
+    //TODO :  can be primary key for the book entity????
 
-    public String getTitle() {
-        return title;
-    }
+    @ManyToMany
+    @JoinTable(name = "book_author", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private List<Author> authors =new ArrayList<>();
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public int getIsbn() {
-        return this.isbn;
-    }
-
-    public void setIsbn(int isbn) {
-        this.isbn = isbn;
-    }
-
-    public String getPublication() {
-        return publication;
-    }
-
-    public void setPublication(String publication) {
-        this.publication = publication;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Book(Long id, String title, String author, String publication, int isbn) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.publication = publication;
-        this.isbn = isbn;
-    }
-
-    public Book() {
-
-    }
-
+    @ManyToMany
+    @JoinTable(name = "book_reservation", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "reservation_id"))
+    private List<Reservation> reservedBook = new ArrayList<>();
 }

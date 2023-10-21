@@ -6,30 +6,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
-@Table(name = "members")
-public class Member {
+@Table(name = "authors")
+public class Author {
     @Id
     @GeneratedValue
     private Long id;
     @Column(name = "name")
     private String name;
-    @Column(name = "address")
-    private String address;
-    @Column (name = "email")
+    @Column(name = "gender")
+    private String gender;
+    @Column(name = "email")
     private String email;
-    @Column(name = "mobile_number")
-    private String mobileNumber;
 
-    @OneToOne
-    @JoinColumn(name = "subscription_id")
-    private Subscription subscription;
-
+    @ManyToMany(mappedBy = "authors")
+    private List<Book> publishedBooks = new ArrayList<>() ;
 }

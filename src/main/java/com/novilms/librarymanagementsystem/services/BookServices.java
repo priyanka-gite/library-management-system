@@ -44,15 +44,6 @@ public class BookServices {
         return convertBookListToDtoList(bookList);
     }
 
-    private List<BookDto> convertBookListToDtoList(List<Book> bookList) {
-        List<BookDto> bookDtoList = new ArrayList<>();
-
-        for (Book book : bookList) {
-            BookDto dto = convertBookToDto(book);
-            bookDtoList.add(dto);
-        }
-        return bookDtoList;
-    }
 
     public BookDto addBook(BookDto bookDto) {
         bookRepository.save(convertDtoToBook(bookDto));
@@ -67,26 +58,24 @@ public class BookServices {
         if (!bookRepository.existsById(id)) {
             throw new RecordNotFoundException("Book Not Found");
         }
-        Book storedBook = bookRepository.findById(id).orElse(null);
-        storedBook.setId(bookDto.getId());
-        storedBook.setTitle(bookDto.getTitle());
-        storedBook.setAuthor(bookDto.getAuthor());
-        storedBook.setIsbn(bookDto.getIsbn());
-        storedBook.setPublication(bookDto.getPublication());
-        bookRepository.save(storedBook);
+        Book updateBook = bookRepository.findById(id).orElse(null);
+        updateBook.setId(bookDto.getId());
+        updateBook.setTitle(bookDto.getTitle());
+        updateBook.setIsbn(bookDto.getIsbn());
+        updateBook.setCategory(bookDto.getCategory());
+        updateBook.setIsBorrowed(bookDto.getIsBorrowed());
+        bookRepository.save(updateBook);
         return bookDto;
     }
 
-
-//    ---------------CONVERSIONS--------------------
+    //    ---------------CONVERSIONS--------------------
 
     public Book convertDtoToBook(BookDto bookDto) {
         Book book = new Book();
-
         book.setTitle(bookDto.getTitle());
-        book.setAuthor(bookDto.getAuthor());
+        book.setCategory(bookDto.getCategory());
         book.setIsbn(bookDto.getIsbn());
-        book.setPublication(bookDto.getPublication());
+        book.setIsBorrowed(bookDto.getIsBorrowed());
 
         return book;
     }
@@ -100,6 +89,16 @@ public class BookServices {
         bookDto.setPublication(book.getPublication());
         return bookDto;
 
+    }
+
+    private List<BookDto> convertBookListToDtoList(List<Book> bookList) {
+        List<BookDto> bookDtoList = new ArrayList<>();
+
+        for (Book book : bookList) {
+            BookDto dto = convertBookToDto(book);
+            bookDtoList.add(dto);
+        }
+        return bookDtoList;
     }
 
 }

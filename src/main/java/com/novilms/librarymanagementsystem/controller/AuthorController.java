@@ -1,4 +1,5 @@
 package com.novilms.librarymanagementsystem.controller;
 
-public class SubscriptionController {
+public class AuthorController {
+
 }

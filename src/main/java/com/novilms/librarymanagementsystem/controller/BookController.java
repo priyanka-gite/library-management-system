@@ -1,7 +1,6 @@
 package com.novilms.librarymanagementsystem.controller;
 
 import com.novilms.librarymanagementsystem.dtos.BookDto;
-import com.novilms.librarymanagementsystem.model.Book;
 import com.novilms.librarymanagementsystem.services.BookServices;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +9,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
-
+@RequestMapping("books")
 public class BookController {
 
     private final BookServices bookServices;
@@ -23,7 +21,7 @@ public class BookController {
         this.bookServices = bookServices;
     }
 
-    @GetMapping("/books")
+    @GetMapping
     public ResponseEntity<List<BookDto>> getAllBooks(@RequestParam(value = "title", required = false) Optional<String> title) {
         List<BookDto> dtos;
         if (title.isEmpty()) {
@@ -35,7 +33,7 @@ public class BookController {
     }
 
 
-    @GetMapping("/books/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<BookDto> getBookById(@PathVariable("id") Long id) {
 
         BookDto bookDto = bookServices.getBookById(id);
@@ -44,7 +42,7 @@ public class BookController {
     }
 
 
-    @PostMapping("books")
+    @PostMapping
     public ResponseEntity<Object> addBook(@Valid @RequestBody BookDto bookDto) {
 
         BookDto dto = bookServices.addBook(bookDto);
@@ -55,7 +53,7 @@ public class BookController {
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @DeleteMapping("/books/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteBook(@PathVariable Long id) {
 
         bookServices.deleteBook(id);
@@ -64,7 +62,7 @@ public class BookController {
 
     }
 
-    @PutMapping("/books/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updateBook(@PathVariable Long id, @Valid @RequestBody BookDto newBook) {
 
         BookDto dto = bookServices.updateBook(id, newBook);
