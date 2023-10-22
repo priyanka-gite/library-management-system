@@ -1,5 +1,6 @@
 package com.novilms.librarymanagementsystem.dtos;
 
+import com.novilms.librarymanagementsystem.model.Subscription;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +18,8 @@ public class MemberDto {
     @NotNull(message = "member name is required")
     private String name;
     private String address;
-    private Date startDateOfMembership;
-    private int maxBookLimit;
-    private Date endDateOfMembership;
-    
+    private String email;
+    private String mobileNumber;
+    private Subscription subscription;
 }
 

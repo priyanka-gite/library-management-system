@@ -1,9 +1,13 @@
 package com.novilms.librarymanagementsystem.dtos;
 
+import com.novilms.librarymanagementsystem.model.Book;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,4 +18,5 @@ public class AuthorDto {
     private String name;
     private String gender;
     private String email;
+    private List<Book> publishedBooks = new ArrayList<>() ;
 }

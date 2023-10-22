@@ -4,20 +4,18 @@ import com.novilms.librarymanagementsystem.dtos.BookDto;
 import com.novilms.librarymanagementsystem.exceptions.RecordNotFoundException;
 import com.novilms.librarymanagementsystem.model.Book;
 import com.novilms.librarymanagementsystem.repository.BookRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class BookServices {
 
     private final BookRepository bookRepository;
-
-    public BookServices(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
 
     public List<BookDto> getAllBooks() {
         List<Book> books = bookRepository.findAll();
@@ -29,7 +27,7 @@ public class BookServices {
 
     }
 
-    public BookDto getBookById(long id) {
+    public BookDto getBookById(Long id) {
         Optional<Book> book = bookRepository.findById(id);
         if (book.isPresent()) {
             BookDto bookDto = convertBookToDto(book.get());
@@ -40,7 +38,7 @@ public class BookServices {
     }
 
     public List<BookDto> getBookByTitle(String title) {
-        List<Book> bookList = bookRepository.findAllBooksByTitleEqualsIgnoreCase(title);
+        List<Book> bookList = bookRepository.findAllBooksByTitle(title);
         return convertBookListToDtoList(bookList);
     }
 
@@ -59,11 +57,13 @@ public class BookServices {
             throw new RecordNotFoundException("Book Not Found");
         }
         Book updateBook = bookRepository.findById(id).orElse(null);
-        updateBook.setId(bookDto.getId());
         updateBook.setTitle(bookDto.getTitle());
         updateBook.setIsbn(bookDto.getIsbn());
         updateBook.setCategory(bookDto.getCategory());
         updateBook.setIsBorrowed(bookDto.getIsBorrowed());
+        updateBook.setAuthors(bookDto.getAuthors());
+        updateBook.setReservedBook(bookDto.getReservedBook());
+        updateBook.setNumberOfCopies(bookDto.getNumberOfCopies());
         bookRepository.save(updateBook);
         return bookDto;
     }
@@ -76,7 +76,9 @@ public class BookServices {
         book.setCategory(bookDto.getCategory());
         book.setIsbn(bookDto.getIsbn());
         book.setIsBorrowed(bookDto.getIsBorrowed());
-
+        book.setNumberOfCopies(bookDto.getNumberOfCopies());
+        book.setAuthors(bookDto.getAuthors());
+        book.setReservedBook(bookDto.getReservedBook());
         return book;
     }
 
@@ -84,9 +86,12 @@ public class BookServices {
         BookDto bookDto = new BookDto();
         bookDto.setId(book.getId());
         bookDto.setTitle(book.getTitle());
-        bookDto.setAuthor(book.getAuthor());
         bookDto.setIsbn(book.getIsbn());
-        bookDto.setPublication(book.getPublication());
+        bookDto.setCategory(book.getCategory());
+        bookDto.setIsBorrowed(book.getIsBorrowed());
+        bookDto.setNumberOfCopies(book.getNumberOfCopies());
+        bookDto.setAuthors(book.getAuthors());
+        bookDto.setReservedBook(book.getReservedBook());
         return bookDto;
 
     }
