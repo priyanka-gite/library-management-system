@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -28,4 +29,16 @@ public class Author {
 
     @ManyToMany(mappedBy = "authors")
     private List<Book> publishedBooks = new ArrayList<>() ;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Author)) return false;
+        return id != null && id.equals(((Author) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

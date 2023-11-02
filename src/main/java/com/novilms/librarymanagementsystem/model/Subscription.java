@@ -21,21 +21,17 @@ public class Subscription {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(name = "start_date_of_subscription")
-    private Date startDateOfSubscription;
-    @Column(name = "end_date_of_subscription")
-    private Date endDateOfSubscription;
+    @Column(name = "start_date")
+    private Date startDate;
+    @Column(name = "end_date")
+    private Date endDate;
     @Column(name = "subscription_type")
     private SubscriptionType subscriptionType;
-    @Column(name = "max-book-limit")
+    @Column(name = "max_book_limit")
     private int maxBookLimit;
     @Column(name = "number_of_books_borrowed")
     private int numberOfBooksBorrowed;
 
     @OneToOne(mappedBy = "subscription")
-    private Member member;
-
-    @OneToMany (mappedBy = "subscription")
-    private List<Reservation> reservationList = new ArrayList<>();
-
+    private User user;
 }
