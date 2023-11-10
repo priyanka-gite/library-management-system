@@ -24,11 +24,9 @@ public class User {
     private String username;
     @Column(name = "password")
     private String password;
-    @Column(name = "name")
-    private String name;
     @Column(name = "address")
     private String address;
-    @Column (name = "email")
+    @Column(name = "email")
     private String email;
     @Column(name = "mobile_number")
     private String mobileNumber;
@@ -38,7 +36,8 @@ public class User {
     private Set<Role> role;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<Reservation> reservations;
+    private Set<Reservation> reservations;
+
     @OneToOne
     private Subscription subscription;
 
@@ -57,8 +56,7 @@ public class User {
             if (this.subscription != null) {
                 this.subscription.setUser(null);
             }
-        }
-        else {
+        } else {
             subscription.setUser(this);
         }
         this.subscription = subscription;

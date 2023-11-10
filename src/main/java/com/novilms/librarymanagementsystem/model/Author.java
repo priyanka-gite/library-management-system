@@ -1,14 +1,9 @@
 package com.novilms.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -28,7 +23,7 @@ public class Author {
     private String email;
 
     @ManyToMany(mappedBy = "authors")
-    private List<Book> publishedBooks = new ArrayList<>() ;
+    private Set<Book> publishedBooks = new HashSet<>() ;
 
     @Override
     public boolean equals(Object o) {

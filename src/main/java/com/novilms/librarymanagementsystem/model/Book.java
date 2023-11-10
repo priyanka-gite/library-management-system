@@ -1,28 +1,19 @@
 package com.novilms.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "books")
 public class Book {
     @Id
     @GeneratedValue
     private Long id;
-
-    @Column(name = "isbn" )
-    private Long isbn;
     @Column(name = "title")
     private String title;
     @Column(name = "category")
@@ -34,11 +25,11 @@ public class Book {
 
     @ManyToMany
     @JoinTable(name = "book_author", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
-    private List<Author> authors =new ArrayList<>();
+    private Set<Author> authors =new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "book_reservation", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "reservation_id"))
-    private List<Reservation> reservedBook = new ArrayList<>();
+    private Set<Reservation> reservedBook = new HashSet<>();
 
     public void addAuthor(Author author) {
         authors.add(author);

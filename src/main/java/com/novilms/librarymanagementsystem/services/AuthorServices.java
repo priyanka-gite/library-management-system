@@ -54,10 +54,10 @@ public class AuthorServices {
             throw new RecordNotFoundException("Book Not Found");
         }
         Author updateAuthor = authorRepository.findById(id).orElse(null);
-        updateAuthor.setEmail(authorDto.getEmail());
-        updateAuthor.setGender(authorDto.getGender());
-        updateAuthor.setName(authorDto.getName());
-        updateAuthor.setPublishedBooks(authorDto.getPublishedBooks());
+        updateAuthor.setEmail(authorDto.email());
+        updateAuthor.setGender(authorDto.gender());
+        updateAuthor.setName(authorDto.name());
+        updateAuthor.setPublishedBooks(authorDto.publishedBooks());
         return authorDto;
     }
 
@@ -65,19 +65,15 @@ public class AuthorServices {
 
     private Author convertDtoToAuthor(AuthorDto authorDto) {
         Author author = new Author();
-        author.setName(authorDto.getName());
-        author.setEmail(authorDto.getEmail());
-        author.setGender(authorDto.getGender());
-        author.setPublishedBooks(authorDto.getPublishedBooks());
+        author.setName(authorDto.name());
+        author.setEmail(authorDto.email());
+        author.setGender(authorDto.gender());
+        author.setPublishedBooks(authorDto.publishedBooks());
         return author;
     }
 
     private AuthorDto convertAuthorToDto(Author author) {
-        AuthorDto authorDto = new AuthorDto();
-        authorDto.setName(author.getName());
-        authorDto.setGender(author.getGender());
-        authorDto.setEmail(author.getEmail());
-        authorDto.setPublishedBooks(author.getPublishedBooks());
+        AuthorDto authorDto = new AuthorDto (author.getId(),author.getName(),author.getGender(),author.getEmail(),author.getPublishedBooks());
         return authorDto;
     }
 

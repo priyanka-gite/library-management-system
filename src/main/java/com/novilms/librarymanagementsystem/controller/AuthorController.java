@@ -29,7 +29,7 @@ public class AuthorController {
          return ResponseEntity.ok(dtos);
      }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<AuthorDto> getAuthorById(@PathVariable("id") Long id) {
          AuthorDto authorDto = authorServices.getAuthorById(id);
         return ResponseEntity.ok(authorDto);
@@ -41,17 +41,17 @@ public class AuthorController {
 
         URI uri = URI.create(ServletUriComponentsBuilder.
                 fromCurrentRequest().
-                path(new StringBuilder().append("/").append(dto.getId()).toString()).toUriString());
+                path(new StringBuilder().append("/").append(dto.id()).toString()).toUriString());
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Object> deleteAuthor(@PathVariable Long id) {
         authorServices.deleteAuthor(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<Object> updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorDto newAuthor) {
         AuthorDto dto = authorServices.updateAuthor(id, newAuthor);
         return ResponseEntity.ok().body(dto);

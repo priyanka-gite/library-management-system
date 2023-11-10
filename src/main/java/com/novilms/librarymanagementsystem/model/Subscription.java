@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -20,9 +21,9 @@ public class Subscription {
     @GeneratedValue
     private Long id;
     @Column(name = "start_date")
-    private Date startDate;
+    private LocalDate startDate;
     @Column(name = "end_date")
-    private Date endDate;
+    private LocalDate endDate;
     @Column(name = "subscription_type")
     private SubscriptionType subscriptionType;
     @Column(name = "max_book_limit")

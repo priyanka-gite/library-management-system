@@ -57,13 +57,12 @@ public class BookServices {
             throw new RecordNotFoundException("Book Not Found");
         }
         Book updateBook = bookRepository.findById(id).orElse(null);
-        updateBook.setTitle(bookDto.getTitle());
-        updateBook.setIsbn(bookDto.getIsbn());
-        updateBook.setCategory(bookDto.getCategory());
-        updateBook.setIsBorrowed(bookDto.getIsBorrowed());
-        updateBook.setAuthors(bookDto.getAuthors());
-        updateBook.setReservedBook(bookDto.getReservedBook());
-        updateBook.setNumberOfCopies(bookDto.getNumberOfCopies());
+        updateBook.setTitle(bookDto.title());
+        updateBook.setCategory(bookDto.category());
+        updateBook.setIsBorrowed(bookDto.isBorrowed());
+        updateBook.setAuthors(bookDto.authors());
+        updateBook.setReservedBook(bookDto.reservedBook());
+        updateBook.setNumberOfCopies(bookDto.numberOfCopies());
         bookRepository.save(updateBook);
         return bookDto;
     }
@@ -72,26 +71,17 @@ public class BookServices {
 
     public Book convertDtoToBook(BookDto bookDto) {
         Book book = new Book();
-        book.setTitle(bookDto.getTitle());
-        book.setCategory(bookDto.getCategory());
-        book.setIsbn(bookDto.getIsbn());
-        book.setIsBorrowed(bookDto.getIsBorrowed());
-        book.setNumberOfCopies(bookDto.getNumberOfCopies());
-        book.setAuthors(bookDto.getAuthors());
-        book.setReservedBook(bookDto.getReservedBook());
+        book.setTitle(bookDto.title());
+        book.setCategory(bookDto.category());
+        book.setIsBorrowed(bookDto.isBorrowed());
+        book.setNumberOfCopies(bookDto.numberOfCopies());
+        book.setAuthors(bookDto.authors());
+        book.setReservedBook(bookDto.reservedBook());
         return book;
     }
 
     public BookDto convertBookToDto(Book book) {
-        BookDto bookDto = new BookDto();
-        bookDto.setId(book.getId());
-        bookDto.setTitle(book.getTitle());
-        bookDto.setIsbn(book.getIsbn());
-        bookDto.setCategory(book.getCategory());
-        bookDto.setIsBorrowed(book.getIsBorrowed());
-        bookDto.setNumberOfCopies(book.getNumberOfCopies());
-        bookDto.setAuthors(book.getAuthors());
-        bookDto.setReservedBook(book.getReservedBook());
+        BookDto bookDto = new BookDto(book.getId(),book.getTitle(),book.getCategory(),book.getIsBorrowed(),book.getNumberOfCopies(),book.getAuthors(),book.getReservedBook());
         return bookDto;
 
     }

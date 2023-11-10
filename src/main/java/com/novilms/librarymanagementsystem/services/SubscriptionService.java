@@ -20,13 +20,12 @@ public class SubscriptionService {
 
     private Subscription convertDtoToSubscription(SubscriptionDto subscriptionDto) {
         Subscription subscription = new Subscription();
-        subscription.setStartDateOfSubscription(subscriptionDto.getStartDateOfSubscription());
-        subscription.setEndDateOfSubscription(subscriptionDto.getEndDateOfSubscription());
-        subscription.setSubscriptionType(subscription.getSubscriptionType());
-        subscription.setMaxBookLimit(subscriptionDto.getMaxBookLimit());
-        subscription.setNumberOfBooksBorrowed(subscriptionDto.getNumberOfBooksBorrowed());
-        subscription.setMember(subscriptionDto.getMember());
-        subscription.setReservationList(subscription.getReservationList());
+        subscription.setStartDate(subscriptionDto.startDate());
+        subscription.setEndDate(subscriptionDto.endDate());
+        subscription.setMaxBookLimit(subscriptionDto.maxBookLimit());
+        subscription.setNumberOfBooksBorrowed(subscriptionDto.numberOfBooksBorrowed());
+        subscription.setSubscriptionType(subscriptionDto.subscriptionType());
+        subscription.setUser(subscription.getUser());
         return subscription;
     }
 
@@ -35,13 +34,11 @@ public class SubscriptionService {
             throw new RecordNotFoundException("Subscription Not Found");
         }
         Subscription updateSubscription = subscriptionRepository.findById(id).orElse(null);
-        updateSubscription.setStartDateOfSubscription(subscriptionDto.getStartDateOfSubscription());
-        updateSubscription.setEndDateOfSubscription(subscriptionDto.getEndDateOfSubscription());
-        updateSubscription.setSubscriptionType(subscriptionDto.getSubscriptionType());
-        updateSubscription.setMaxBookLimit(subscriptionDto.getMaxBookLimit());
-        updateSubscription.setNumberOfBooksBorrowed(subscriptionDto.getNumberOfBooksBorrowed());
-        updateSubscription.setMember(subscriptionDto.getMember());
-        updateSubscription.setReservationList(subscriptionDto.getReservationList());
+        updateSubscription.setStartDate(subscriptionDto.startDate());
+        updateSubscription.setEndDate(subscriptionDto.endDate());
+        updateSubscription.setSubscriptionType(subscriptionDto.subscriptionType());
+        updateSubscription.setMaxBookLimit(subscriptionDto.maxBookLimit());
+        updateSubscription.setNumberOfBooksBorrowed(subscriptionDto.numberOfBooksBorrowed());
         return subscriptionDto;
     }
 }

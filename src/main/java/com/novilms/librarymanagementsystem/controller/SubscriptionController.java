@@ -14,6 +14,7 @@ import java.net.URI;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping("subscriptions")
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
@@ -22,11 +23,11 @@ public class SubscriptionController {
         SubscriptionDto dto = subscriptionService.createSubscription(subscriptionDto);
         URI uri = URI.create(ServletUriComponentsBuilder.
                 fromCurrentRequest().
-                path(new StringBuilder().append("/").append(dto.getId()).toString()).toUriString());
+                path(new StringBuilder().append("/").append(dto.id()).toString()).toUriString());
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @PutMapping("subscription/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updateSubscription(@PathVariable Long id, @RequestBody SubscriptionDto newSubscription) {
         SubscriptionDto dto = subscriptionService.updateSubscription(id, newSubscription);
         return ResponseEntity.ok().body(dto);

@@ -1,21 +1,12 @@
 package com.novilms.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-
+@Data
 @Entity
 @Table(name = "reservations")
 public class Reservation {
@@ -30,7 +21,7 @@ public class Reservation {
     private  Boolean isReturned;
 
     @ManyToMany(mappedBy = "reservedBook" )
-    private List<Book> reservedBooks = new ArrayList<>();
+    private Set<Book> reservedBooks = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;

@@ -51,13 +51,12 @@ public class ReservationServices {
             throw new RecordNotFoundException("Reservation Not Found");
         }
         Reservation updateReservation = reserveRepository.findById(id).orElse(null);
-        updateReservation.setReserveDate(reservationDto.getReserveDate());
-        updateReservation.setReturnDate(reservationDto.getReturnDate());
-        updateReservation.setIsReturned(reservationDto.getIsReturned());
-        updateReservation.setListOfBooksReserved(reservationDto.getListOfBooksReserved());
-        updateReservation.setSubscription(reservationDto.getSubscription());
+        updateReservation.setReservationDate(reservationDto.reservationDate());
+        updateReservation.setReturnDate(reservationDto.returnDate());
+        updateReservation.setIsReturned(reservationDto.isReturned());
+        updateReservation.setReservedBooks(reservationDto.BooksReserved());
+        updateReservation.setUser(reservationDto.user());
         return reservationDto;
-
     }
 
 
@@ -65,21 +64,16 @@ public class ReservationServices {
 
     private Reservation convertDtoToReservation(ReservationDto reservationDto) {
         Reservation reservation = new Reservation();
-        reservation.setReserveDate(reservationDto.getReserveDate());
-        reservation.setReturnDate(reservationDto.getReturnDate());
-        reservation.setIsReturned(reservationDto.getIsReturned());
-        reservation.setListOfBooksReserved(reservationDto.getListOfBooksReserved());
-        reservation.setSubscription(reservationDto.getSubscription());
+        reservation.setReservationDate(reservationDto.reservationDate());
+        reservation.setReturnDate(reservationDto.returnDate());
+        reservation.setIsReturned(reservationDto.isReturned());
+        reservation.setReservedBooks(reservationDto.BooksReserved());
+        reservation.setUser(reservationDto.user());
         return reservation;
     }
 
     private ReservationDto convertReservationToDto(Reservation reservation) {
-        ReservationDto reservationDto = new ReservationDto();
-        reservationDto.setReserveDate(reservation.getReserveDate());
-        reservationDto.setReturnDate(reservation.getReturnDate());
-        reservationDto.setIsReturned(reservation.getIsReturned());
-        reservationDto.setListOfBooksReserved(reservation.getListOfBooksReserved());
-        reservationDto.setSubscription(reservation.getSubscription());
+        ReservationDto reservationDto = new ReservationDto(reservation.getId(),reservation.getReservationDate(),reservation.getReturnDate(),reservation.getIsReturned(),reservation.getReservedBooks(),reservation.getUser());
         return reservationDto;
     }
 

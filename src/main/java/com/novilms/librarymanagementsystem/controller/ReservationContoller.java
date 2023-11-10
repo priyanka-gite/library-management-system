@@ -24,7 +24,7 @@ public class ReservationContoller {
         return ResponseEntity.ok(dtos);
     }
 
-    @GetMapping("/{id")
+    @GetMapping("{id}")
     public ResponseEntity<ReservationDto> getReservationById(@PathVariable("id") Long id){
         ReservationDto reservationDto = reservationServices.getReservationById(id);
         return ResponseEntity.ok(reservationDto);
@@ -35,18 +35,18 @@ public class ReservationContoller {
         ReservationDto dto = reservationServices.addReservation(reservationDto);
         URI uri = URI.create(ServletUriComponentsBuilder.
                 fromCurrentRequest().
-                path(new StringBuilder().append("/").append(dto.getId()).toString()).toUriString());
+                path(new StringBuilder().append("/").append(dto.id()).toString()).toUriString());
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {
         reservationServices.deleteReservation(id);
         return ResponseEntity.noContent().build();
 
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<Object> updateReservation(@PathVariable Long id, @Valid @RequestBody ReservationDto newReservation) {
         ReservationDto dto = reservationServices.updateReservation(id, newReservation);
         return ResponseEntity.ok().body(dto);
