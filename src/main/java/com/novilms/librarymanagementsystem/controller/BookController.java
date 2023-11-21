@@ -2,7 +2,7 @@ package com.novilms.librarymanagementsystem.controller;
 
 import com.novilms.librarymanagementsystem.dtos.BookDto;
 import com.novilms.librarymanagementsystem.model.Author;
-import com.novilms.librarymanagementsystem.services.BookServices;
+import com.novilms.librarymanagementsystem.service.BookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import java.util.Set;
 @RequestMapping("books")
 public class BookController {
 
-    private final BookServices bookServices;
+    private final BookService bookServices;
 
     @GetMapping
     public ResponseEntity<List<BookDto>> getAllBooks(@RequestParam(value = "title", required = false) Optional<String> title, @RequestParam(value = "book_author", required = false)Optional<Set<Author>> authors) {

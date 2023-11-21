@@ -1,7 +1,7 @@
 package com.novilms.librarymanagementsystem.controller;
 
 import com.novilms.librarymanagementsystem.dtos.ReservationDto;
-import com.novilms.librarymanagementsystem.services.ReservationServices;
+import com.novilms.librarymanagementsystem.service.ReservationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,23 +16,23 @@ import java.util.List;
 @RequestMapping("reservations")
 public class ReservationContoller {
 
-    private final ReservationServices reservationServices;
+    private final ReservationService reservationService;
 
     @GetMapping
     public ResponseEntity<List<ReservationDto>> getAllReservation(){
-        List<ReservationDto> dtos = reservationServices.getAllReservations();
+        List<ReservationDto> dtos = reservationService.getAllReservations();
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<ReservationDto> getReservationById(@PathVariable("id") Long id){
-        ReservationDto reservationDto = reservationServices.getReservationById(id);
+        ReservationDto reservationDto = reservationService.getReservationById(id);
         return ResponseEntity.ok(reservationDto);
     }
 
     @PostMapping
     public ResponseEntity<Object> addReservation (@RequestBody ReservationDto reservationDto){
-        ReservationDto dto = reservationServices.addReservation(reservationDto);
+        ReservationDto dto = reservationService.addReservation(reservationDto);
         URI uri = URI.create(ServletUriComponentsBuilder.
                 fromCurrentRequest().
                 path(new StringBuilder().append("/").append(dto.id()).toString()).toUriString());
@@ -41,14 +41,14 @@ public class ReservationContoller {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {
-        reservationServices.deleteReservation(id);
+        reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
 
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Object> updateReservation(@PathVariable Long id, @Valid @RequestBody ReservationDto newReservation) {
-        ReservationDto dto = reservationServices.updateReservation(id, newReservation);
+        ReservationDto dto = reservationService.updateReservation(id, newReservation);
         return ResponseEntity.ok().body(dto);
     }
 

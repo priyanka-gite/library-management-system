@@ -1,4 +1,4 @@
-package com.novilms.librarymanagementsystem.services;
+package com.novilms.librarymanagementsystem.service;
 
 import com.novilms.librarymanagementsystem.dtos.SubscriptionDto;
 import com.novilms.librarymanagementsystem.exceptions.RecordNotFoundException;

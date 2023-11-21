@@ -1,4 +1,4 @@
-package com.novilms.librarymanagementsystem.services;
+package com.novilms.librarymanagementsystem.service;
 
 import com.novilms.librarymanagementsystem.dtos.AuthorDto;
 import com.novilms.librarymanagementsystem.exceptions.RecordNotFoundException;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class AuthorServices {
+public class AuthorService {
     private final AuthorRepository authorRepository;
 
     public List<AuthorDto> getAllAuthors() {

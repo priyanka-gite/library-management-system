@@ -1,7 +1,7 @@
 package com.novilms.librarymanagementsystem.controller;
 
 import com.novilms.librarymanagementsystem.dtos.AuthorDto;
-import com.novilms.librarymanagementsystem.services.AuthorServices;
+import com.novilms.librarymanagementsystem.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("authors")
 public class AuthorController {
-     private final AuthorServices authorServices;
+     private final AuthorService authorServices;
 
      @GetMapping
      public ResponseEntity<List<AuthorDto>> getAllAuthors(@RequestParam(value = "name", required = false) Optional<String> name) {

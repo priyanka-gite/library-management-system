@@ -1,10 +1,8 @@
 package com.novilms.librarymanagementsystem.controller;
 
 
-import com.novilms.librarymanagementsystem.dtos.BookDto;
 import com.novilms.librarymanagementsystem.dtos.SubscriptionDto;
-import com.novilms.librarymanagementsystem.services.SubscriptionService;
-import jakarta.validation.Valid;
+import com.novilms.librarymanagementsystem.service.SubscriptionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

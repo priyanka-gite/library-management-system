@@ -1,8 +1,8 @@
 package com.novilms.librarymanagementsystem.controller;
 
-import com.novilms.librarymanagementsystem.FileUploadResponse.FileUploadResponse;
+import com.novilms.librarymanagementsystem.fileUploadResponse.FileUploadResponse;
 import com.novilms.librarymanagementsystem.model.FileDocument;
-import com.novilms.librarymanagementsystem.services.DatabaseService;
+import com.novilms.librarymanagementsystem.service.DatabaseService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

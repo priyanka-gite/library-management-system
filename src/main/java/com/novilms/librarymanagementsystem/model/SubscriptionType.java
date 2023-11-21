@@ -1,6 +1,6 @@
 package com.novilms.librarymanagementsystem.model;
 
 public enum SubscriptionType {
-    BELOWEIGHTEEN,
-    ABOVEEIGHTEEN
+    BELOW_EIGHTEEN,
+    ABOVE_EIGHTEEN
 }

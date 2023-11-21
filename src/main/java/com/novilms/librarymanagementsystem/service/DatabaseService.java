@@ -1,6 +1,6 @@
-package com.novilms.librarymanagementsystem.services;
+package com.novilms.librarymanagementsystem.service;
 
-import com.novilms.librarymanagementsystem.FileUploadResponse.FileUploadResponse;
+import com.novilms.librarymanagementsystem.fileUploadResponse.FileUploadResponse;
 import com.novilms.librarymanagementsystem.model.FileDocument;
 import com.novilms.librarymanagementsystem.repository.DocFileRepository;
 import org.springframework.core.io.Resource;

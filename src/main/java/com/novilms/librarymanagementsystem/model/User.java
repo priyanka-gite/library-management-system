@@ -1,12 +1,8 @@
 package com.novilms.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -31,9 +27,9 @@ public class User {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> role;
+    private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Reservation> reservations;
@@ -61,4 +57,5 @@ public class User {
         }
         this.subscription = subscription;
     }
+
 }

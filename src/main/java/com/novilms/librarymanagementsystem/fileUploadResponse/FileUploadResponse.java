@@ -1,4 +1,4 @@
-package com.novilms.librarymanagementsystem.FileUploadResponse;
+package com.novilms.librarymanagementsystem.fileUploadResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
