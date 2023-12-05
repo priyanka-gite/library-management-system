@@ -14,14 +14,16 @@ public class Book {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "isbn" )
+    private String isbn;
     @Column(name = "title")
     private String title;
     @Column(name = "category")
     private String category;
-    @Column(name = "is_borrowed")
-    private Boolean isBorrowed;
     @Column(name = "number_of_copies")
     private int numberOfCopies;
+    @Column(name = "number_of_copies_borrow")
+    private int numberOfCopiesBorrowed;
 
     @ManyToMany
     @JoinTable(name = "book_author", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
@@ -55,7 +57,7 @@ public class Book {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Book)) return false;
-        return id != null && id.equals(((Book) o).getId());
+        return isbn != null && isbn.equals(((Book) o).getIsbn());
     }
 
     @Override

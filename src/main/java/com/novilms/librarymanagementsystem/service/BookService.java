@@ -59,7 +59,6 @@ public class BookService {
         Book updateBook = bookRepository.findById(id).orElse(null);
         updateBook.setTitle(bookDto.title());
         updateBook.setCategory(bookDto.category());
-        updateBook.setIsBorrowed(bookDto.isBorrowed());
         updateBook.setAuthors(bookDto.authors());
         updateBook.setReservedBook(bookDto.reservedBook());
         updateBook.setNumberOfCopies(bookDto.numberOfCopies());
@@ -73,7 +72,7 @@ public class BookService {
         Book book = new Book();
         book.setTitle(bookDto.title());
         book.setCategory(bookDto.category());
-        book.setIsBorrowed(bookDto.isBorrowed());
+//        book.setIsBorrowed(bookDto.isBorrowed());
         book.setNumberOfCopies(bookDto.numberOfCopies());
         book.setAuthors(bookDto.authors());
         book.setReservedBook(bookDto.reservedBook());
@@ -81,7 +80,7 @@ public class BookService {
     }
 
     public BookDto convertBookToDto(Book book) {
-        BookDto bookDto = new BookDto(book.getId(),book.getTitle(),book.getCategory(),book.getIsBorrowed(),book.getNumberOfCopies(),book.getAuthors(),book.getReservedBook());
+        BookDto bookDto = new BookDto(book.getId(),book.getTitle(),book.getIsbn(),book.getCategory(),book.getNumberOfCopies(),book.getAuthors(),book.getReservedBook());
         return bookDto;
 
     }
