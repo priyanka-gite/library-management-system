@@ -54,7 +54,7 @@ public class ReservationContoller {
 
     @PutMapping("return-book/{id}")
     public ResponseEntity<Object> returnBook(@PathVariable Long id) {
-        reservationService.returnBook(id);
+        reservationService.returnBooks(id);
         return ResponseEntity.ok().build();
     }
 

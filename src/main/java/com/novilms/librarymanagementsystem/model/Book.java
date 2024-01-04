@@ -10,6 +10,10 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "books")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Book {
     @Id
     @GeneratedValue

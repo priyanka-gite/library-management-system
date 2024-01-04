@@ -4,5 +4,5 @@ import java.time.LocalDate;
 import java.util.Set;
 
 
-public record ReservationDto (Long id, LocalDate reservationDate, LocalDate returnDate, Boolean isReturned, Set<BookDto> booksReserved, UserDto user) {
+public record ReservationDto (Long id, LocalDate reservationDate, LocalDate returnDate, Boolean isReturned, Set<String> reservedIsbn, String userEmail) {
 }

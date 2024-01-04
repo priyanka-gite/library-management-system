@@ -9,6 +9,10 @@ import java.util.*;
 @Data
 @Entity
 @Table(name = "reservations")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Reservation {
     @Id
     @GeneratedValue

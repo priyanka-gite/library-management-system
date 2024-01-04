@@ -5,5 +5,5 @@ import lombok.*;
 
 import java.util.Set;
 
-public record AuthorDto (Long id, String name, String gender, String email, Set<Book> publishedBooks) {
+public record AuthorDto (Long id, String name, String gender, String email, Set<BookDto> publishedBooks) {
 }

@@ -57,7 +57,7 @@ public class AuthorService {
         updateAuthor.setEmail(authorDto.email());
         updateAuthor.setGender(authorDto.gender());
         updateAuthor.setName(authorDto.name());
-        updateAuthor.setPublishedBooks(authorDto.publishedBooks());
+//        updateAuthor.setPublishedBooks(authorDto.publishedBooks());
         return authorDto;
     }
 
@@ -68,12 +68,12 @@ public class AuthorService {
         author.setName(authorDto.name());
         author.setEmail(authorDto.email());
         author.setGender(authorDto.gender());
-        author.setPublishedBooks(authorDto.publishedBooks());
+//        author.setPublishedBooks(authorDto.publishedBooks());
         return author;
     }
 
     private AuthorDto convertAuthorToDto(Author author) {
-        AuthorDto authorDto = new AuthorDto (author.getId(),author.getName(),author.getGender(),author.getEmail(),author.getPublishedBooks());
+        AuthorDto authorDto = new AuthorDto (author.getId(),author.getName(),author.getGender(),author.getEmail(),null);//author.getPublishedBooks());
         return authorDto;
     }
 
