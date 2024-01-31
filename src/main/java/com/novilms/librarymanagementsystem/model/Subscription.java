@@ -27,7 +27,6 @@ public class Subscription {
     private int maxBookLimit;
     @Column(name = "number_of_books_borrowed")
     private int numberOfBooksBorrowed;
-
     @OneToOne(mappedBy = "subscription")
     private User user;
 }
