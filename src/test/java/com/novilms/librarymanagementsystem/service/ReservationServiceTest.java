@@ -1,9 +1,6 @@
 package com.novilms.librarymanagementsystem.service;
 
-import com.novilms.librarymanagementsystem.dtos.BookDto;
 import com.novilms.librarymanagementsystem.dtos.ReservationDto;
-import com.novilms.librarymanagementsystem.dtos.SubscriptionDto;
-import com.novilms.librarymanagementsystem.dtos.UserDto;
 import com.novilms.librarymanagementsystem.exceptions.BusinessException;
 import com.novilms.librarymanagementsystem.exceptions.RecordNotFoundException;
 import com.novilms.librarymanagementsystem.model.*;
@@ -11,12 +8,10 @@ import com.novilms.librarymanagementsystem.repository.BookRepository;
 import com.novilms.librarymanagementsystem.repository.ReserveRepository;
 import com.novilms.librarymanagementsystem.repository.SubscriptionRepository;
 import com.novilms.librarymanagementsystem.repository.UserRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -26,7 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.time.LocalDate.*;
+import static java.time.LocalDate.now;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

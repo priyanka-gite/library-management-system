@@ -14,25 +14,23 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("authors")
+@RequestMapping("author")
 public class AuthorController {
      private final AuthorService authorServices;
 
-     @GetMapping
-     public ResponseEntity<List<AuthorDto>> getAllAuthors(@RequestParam(value = "name", required = false) Optional<String> name) {
-         List<AuthorDto> dtos;
-         if (name.isEmpty()) {
-             dtos = authorServices.getAllAuthors();
-         } else {
-             dtos = authorServices.getAuthorByName(name.get());
-         }
-         return ResponseEntity.ok(dtos);
+     @GetMapping("")
+     public ResponseEntity<List<AuthorDto>> getAllAuthors() {
+         return ResponseEntity.ok(authorServices.getAllAuthors());
+     }
+
+     @GetMapping("name/{name}")
+     public ResponseEntity<List<AuthorDto>> getAuthorName(@RequestParam(value = "name") String name) {
+         return ResponseEntity.ok(authorServices.getAuthorByName(name));
      }
 
     @GetMapping("{id}")
     public ResponseEntity<AuthorDto> getAuthorById(@PathVariable("id") Long id) {
-         AuthorDto authorDto = authorServices.getAuthorById(id);
-        return ResponseEntity.ok(authorDto);
+        return ResponseEntity.ok(authorServices.getAuthorById(id));
     }
 
     @PostMapping

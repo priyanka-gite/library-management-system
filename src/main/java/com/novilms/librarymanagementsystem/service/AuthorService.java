@@ -3,18 +3,19 @@ package com.novilms.librarymanagementsystem.service;
 import com.novilms.librarymanagementsystem.dtos.AuthorDto;
 import com.novilms.librarymanagementsystem.exceptions.RecordNotFoundException;
 import com.novilms.librarymanagementsystem.model.Author;
+import com.novilms.librarymanagementsystem.model.Book;
 import com.novilms.librarymanagementsystem.repository.AuthorRepository;
+import com.novilms.librarymanagementsystem.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
 public class AuthorService {
     private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
 
     public List<AuthorDto> getAllAuthors() {
         List<Author> authors = authorRepository.findAll();
@@ -50,14 +51,14 @@ public class AuthorService {
     }
 
     public AuthorDto updateAuthor(Long id, AuthorDto authorDto){
-        if(!authorRepository.existsById(id)){
-            throw new RecordNotFoundException("Book Not Found");
-        }
-        Author updateAuthor = authorRepository.findById(id).orElse(null);
+        Author updateAuthor = authorRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Author Not Found"));
         updateAuthor.setEmail(authorDto.email());
         updateAuthor.setGender(authorDto.gender());
         updateAuthor.setName(authorDto.name());
-//        updateAuthor.setPublishedBooks(authorDto.publishedBooks());
+        for (String isbn : authorDto.publishedBookIsbn()) {
+            updateAuthor.getPublishedBooks().add(bookRepository.findByIsbn(isbn).orElseThrow(() -> new RecordNotFoundException("Book not found with ISBN: " + isbn)));
+        }
+        authorRepository.save(updateAuthor);
         return authorDto;
     }
 
@@ -68,13 +69,18 @@ public class AuthorService {
         author.setName(authorDto.name());
         author.setEmail(authorDto.email());
         author.setGender(authorDto.gender());
-//        author.setPublishedBooks(authorDto.publishedBooks());
+        for (String isbn : authorDto.publishedBookIsbn()) {
+            author.getPublishedBooks().add(bookRepository.findByIsbn(isbn).orElseThrow(() -> new RecordNotFoundException("Book not found with ISBN: " + isbn)));
+        }
         return author;
     }
 
     private AuthorDto convertAuthorToDto(Author author) {
-        AuthorDto authorDto = new AuthorDto (author.getId(),author.getName(),author.getGender(),author.getEmail(),null);//author.getPublishedBooks());
-        return authorDto;
+        Set<String> isbns = new HashSet<>();
+        for (Book publishedBook : author.getPublishedBooks()) {
+            isbns.add(publishedBook.getIsbn());
+        }
+        return new AuthorDto (author.getId(),author.getName(),author.getGender(),author.getEmail(),isbns);
     }
 
     private List<AuthorDto> convertAuthorListToDtoList(List<Author> authorList) {
