@@ -58,9 +58,13 @@ public class SubscriptionService {
     }
 
     public SubscriptionDto getSubscriptions(Long id) {
+        return convertSubscriptionToDto(getSubscription(id));
+    }
+
+    public Subscription getSubscription(Long id) {
         Optional<Subscription> subscription = subscriptionRepository.findById(id);
         if(subscription.isPresent()){
-            return convertSubscriptionToDto(subscription.get());
+            return subscription.get();
         } else {
             throw new RecordNotFoundException("Subscription not Found");
         }

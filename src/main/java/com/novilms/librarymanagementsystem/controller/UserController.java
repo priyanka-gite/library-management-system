@@ -31,6 +31,7 @@ public class UserController {
         } else {
             dtos = userService.getUsersByUsername(username.get());
         }
+
         return ResponseEntity.ok(dtos);
     }
 

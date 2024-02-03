@@ -4,6 +4,7 @@ import com.novilms.librarymanagementsystem.dtos.RoleDto;
 import com.novilms.librarymanagementsystem.dtos.UserDto;
 import com.novilms.librarymanagementsystem.exceptions.BusinessException;
 import com.novilms.librarymanagementsystem.exceptions.RecordNotFoundException;
+import com.novilms.librarymanagementsystem.model.Reservation;
 import com.novilms.librarymanagementsystem.model.Role;
 import com.novilms.librarymanagementsystem.model.User;
 import com.novilms.librarymanagementsystem.repository.RoleRepository;
@@ -22,6 +23,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReservationService reservationService;
+    private final SubscriptionService subscriptionService;
 
     public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
@@ -55,9 +58,6 @@ public class UserService {
         return userDto;
     }
 
-
-
-
     //    ---------------CONVERSIONS--------------------
     public UserDto convertUserToDto(User user) {
         UserDto UserDto = new UserDto(user.getId(), user.getUsername(), user.getPassword(),user.getAddress(), user.getEmail(), user.getMobileNumber(), user.getRoles().stream().map(r -> new RoleDto(r.getRoleName())).collect(Collectors.toSet()), Collections.emptySet(), null);
@@ -82,9 +82,12 @@ public class UserService {
             set.add(role);
         }
         user.setRoles(set);
-        //TODO fix this
-        //user.setReservations(userDto.reservations());
-        //user.setSubscription(userDto.subscription());
+        Set<Reservation> reservations = new HashSet<>();
+        for(Long res : userDto.reservationIds()){
+            reservations.add(reservationService.getReservation(res));
+        }
+        user.setReservations(reservations);
+        user.setSubscription(subscriptionService.getSubscription(userDto.id()));
         return user;
     }
 
