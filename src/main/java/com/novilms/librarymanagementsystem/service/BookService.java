@@ -30,20 +30,13 @@ public class BookService {
     }
 
     public BookDto getBookById(Long id) {
-        Optional<Book> book = bookRepository.findById(id);
-        if (book.isPresent()) {
-            BookDto bookDto = convertBookToDto(book.get());
-            return bookDto;
-        } else {
-            throw new RecordNotFoundException("Book not Found");
-        }
+        return convertBookToDto(getBook(id));
     }
 
     public List<BookDto> getBookByTitle(String title) {
         List<Book> bookList = bookRepository.findAllBooksByTitle(title);
         return convertBookListToDtoList(bookList);
     }
-
 
     public BookDto addBook(BookDto bookDto) {
         bookRepository.save(convertDtoToBook(bookDto, new Book(), bookDto.id()));
@@ -55,14 +48,18 @@ public class BookService {
     }
 
     public BookDto updateBook(Long id, BookDto bookDto) {
-        if (!bookRepository.existsById(id)) {
-            throw new RecordNotFoundException("Book Not Found");
-        }
-        Book updateBook = convertDtoToBook(bookDto, bookRepository.findById(id).orElse(null), id);
+        Book updateBook = convertDtoToBook(bookDto, getBook(id), id);
         bookRepository.save(updateBook);
         return bookDto;
     }
 
+    private Book getBook(Long id) {
+        Optional<Book> bookOpt = bookRepository.findById(id);
+        if (!bookOpt.isPresent()) {
+            throw new RecordNotFoundException("Book Not Found");
+        }
+        return bookOpt.get();
+    }
     //    ---------------CONVERSIONS--------------------
     private Book convertDtoToBook(BookDto bookDto, Book book, Long id) {
         if(book == null ){

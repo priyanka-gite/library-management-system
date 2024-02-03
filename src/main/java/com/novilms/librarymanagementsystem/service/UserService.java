@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
+
 @AllArgsConstructor
 @Service
 public class UserService {
@@ -56,6 +57,21 @@ public class UserService {
         }
         userRepository.save(convertDtoToUser(userDto));
         return userDto;
+    }
+
+
+    public UserDto updateUser(String email, UserDto userDto) {
+        User user = getUser(email);
+        userRepository.save(convertDtoToUser(userDto));
+        return userDto;
+    }
+
+    public User getUser(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if(!user.isPresent()) {
+            throw new RecordNotFoundException("User with email " + email + "not found.");
+        }
+        return user.get();
     }
 
     //    ---------------CONVERSIONS--------------------
@@ -99,5 +115,4 @@ public class UserService {
         }
         return userDtoList;
     }
-
 }

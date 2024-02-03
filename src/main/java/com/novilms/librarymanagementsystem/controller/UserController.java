@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("users")
@@ -51,5 +51,12 @@ public class UserController {
         userService.deleteUser(username);
         return new ResponseEntity<>("User with username: " + username + " deleted", HttpStatus.OK);
     }
+
+    @PutMapping("{email}")
+    public ResponseEntity<Object> updateReservation(@PathVariable String email, @Valid @RequestBody UserDto userDto) {
+        UserDto dto = userService.updateUser(email, userDto);
+        return ResponseEntity.ok().body(dto);
+    }
+
 
 }
