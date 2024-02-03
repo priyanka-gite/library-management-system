@@ -27,10 +27,13 @@ public class AuthorService {
     }
 
     public AuthorDto getAuthorById (Long id) {
+        return convertAuthorToDto(getAuthor(id));
+    }
+
+    public Author getAuthor(Long id) {
         Optional<Author> author = authorRepository.findById(id);
         if(author.isPresent()) {
-            AuthorDto authorDto = convertAuthorToDto(author.get());
-            return authorDto;
+            return author.get();
         } else  {
             throw new RecordNotFoundException("Author not Found");
         }
@@ -51,12 +54,20 @@ public class AuthorService {
     }
 
     public AuthorDto updateAuthor(Long id, AuthorDto authorDto){
-        Author updateAuthor = authorRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Author Not Found"));
+        Optional<Author> author = authorRepository.findById(id);
+        if(!author.isPresent()) {
+            throw new RecordNotFoundException("Author Not Found");
+        }
+        Author updateAuthor = author.get();
         updateAuthor.setEmail(authorDto.email());
         updateAuthor.setGender(authorDto.gender());
         updateAuthor.setName(authorDto.name());
         for (String isbn : authorDto.publishedBookIsbn()) {
-            updateAuthor.getPublishedBooks().add(bookRepository.findByIsbn(isbn).orElseThrow(() -> new RecordNotFoundException("Book not found with ISBN: " + isbn)));
+            Optional<Book> book = bookRepository.findByIsbn(isbn);
+            if(!book.isPresent()) {
+                new RecordNotFoundException("Book not found with ISBN: " + isbn);
+            }
+            updateAuthor.getPublishedBooks().add(book.get());
         }
         authorRepository.save(updateAuthor);
         return authorDto;
@@ -70,7 +81,11 @@ public class AuthorService {
         author.setEmail(authorDto.email());
         author.setGender(authorDto.gender());
         for (String isbn : authorDto.publishedBookIsbn()) {
-            author.getPublishedBooks().add(bookRepository.findByIsbn(isbn).orElseThrow(() -> new RecordNotFoundException("Book not found with ISBN: " + isbn)));
+            Optional<Book> book = bookRepository.findByIsbn(isbn);
+            if(!book.isPresent()) {
+                throw new RecordNotFoundException("Book not found with ISBN: " + isbn);
+            }
+            author.getPublishedBooks().add(book.get());
         }
         return author;
     }

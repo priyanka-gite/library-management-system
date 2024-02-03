@@ -1,10 +1,6 @@
 package com.novilms.librarymanagementsystem.dtos;
 
-public record AuthenticationDto(String email, String password) {
+import jakarta.validation.constraints.NotNull;
 
-    public AuthenticationDto {
-        if (email.isEmpty() && password.isEmpty()){
-            throw new IllegalArgumentException("Username and Password required");
-        }
-    }
+public record AuthenticationDto(@NotNull(message = "User email cannot be epmty") String email, @NotNull(message = "User password cannot be epmty") String password) {
 }

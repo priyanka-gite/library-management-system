@@ -7,6 +7,10 @@ import com.novilms.librarymanagementsystem.repository.SubscriptionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class SubscriptionService {
@@ -15,7 +19,18 @@ public class SubscriptionService {
     public SubscriptionDto createSubscription(SubscriptionDto subscriptionDto) {
         subscriptionRepository.save(convertDtoToSubscription(subscriptionDto));
         return subscriptionDto;
+    }
+    public List<SubscriptionDto> getAllSubscriptions(){
+        List<Subscription> subscriptions = subscriptionRepository.findAll();
+        List<SubscriptionDto> subscriptionDtos = new ArrayList<>();
+        for (Subscription subscription : subscriptions) {
+            subscriptionDtos.add(convertSubscriptionToDto(subscription));
+        }
+        return subscriptionDtos;
+    }
 
+    private SubscriptionDto convertSubscriptionToDto(Subscription subscription) {
+        return new SubscriptionDto(subscription.getId(),subscription.getStartDate(),subscription.getEndDate(),subscription.getMaxBookLimit(),subscription.getNumberOfBooksBorrowed(),subscription.getSubscriptionType(), subscription.getUser().getEmail());
     }
 
     private Subscription convertDtoToSubscription(SubscriptionDto subscriptionDto) {
@@ -40,5 +55,18 @@ public class SubscriptionService {
         updateSubscription.setMaxBookLimit(subscriptionDto.maxBookLimit());
         updateSubscription.setNumberOfBooksBorrowed(subscriptionDto.numberOfBooksBorrowed());
         return subscriptionDto;
+    }
+
+    public SubscriptionDto getSubscriptions(Long id) {
+        Optional<Subscription> subscription = subscriptionRepository.findById(id);
+        if(subscription.isPresent()){
+            return convertSubscriptionToDto(subscription.get());
+        } else {
+            throw new RecordNotFoundException("Subscription not Found");
+        }
+    }
+
+    public void deleteSubscription(Long id) {
+        subscriptionRepository.deleteById(id);
     }
 }

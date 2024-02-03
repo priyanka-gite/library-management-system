@@ -18,12 +18,12 @@ import java.util.Optional;
 public class AuthorController {
      private final AuthorService authorServices;
 
-     @GetMapping("")
+     @GetMapping
      public ResponseEntity<List<AuthorDto>> getAllAuthors() {
          return ResponseEntity.ok(authorServices.getAllAuthors());
      }
 
-     @GetMapping("name/{name}")
+     @GetMapping(params = {"name"})
      public ResponseEntity<List<AuthorDto>> getAuthorName(@RequestParam(value = "name") String name) {
          return ResponseEntity.ok(authorServices.getAuthorByName(name));
      }

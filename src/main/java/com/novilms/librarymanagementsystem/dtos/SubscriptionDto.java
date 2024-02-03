@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 
-public record SubscriptionDto (Long id, @NotEmpty(message = "Subscription start date cannot be empty") LocalDate startDate, @NotEmpty(message = "Subscription end date cannot be empty ") LocalDate endDate, int maxBookLimit, int numberOfBooksBorrowed, @NotEmpty(message = "Subscription type cannot be empty") SubscriptionType subscriptionType, User user) {
+public record SubscriptionDto (Long id, @NotEmpty(message = "Subscription start date cannot be empty") LocalDate startDate, @NotEmpty(message = "Subscription end date cannot be empty ") LocalDate endDate, int maxBookLimit, int numberOfBooksBorrowed, @NotEmpty(message = "Subscription type cannot be empty") SubscriptionType subscriptionType, @NotEmpty(message = "User email cannot be empty ") String userEmail) {
 
 }
 

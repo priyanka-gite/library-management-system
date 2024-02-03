@@ -12,10 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -37,11 +34,14 @@ public class ReservationService {
     }
 
     public ReservationDto getReservationById(Long id) {
+        return convertReservationToDto(getReservation(id));
+    }
+
+    public Reservation getReservation(Long id) {
         Optional<Reservation> reservation = reservationRepository.findById(id);
         ReservationDto reservationDto;
         if (reservation.isPresent()) {
-            reservationDto = convertReservationToDto(reservation.get());
-            return reservationDto;
+            return reservation.get();
         } else {
             throw new RecordNotFoundException("Reservation not Found");
         }
@@ -60,11 +60,23 @@ public class ReservationService {
         // 1.) Find User using email
         // 2.) Find book
         // 3.) Create Reservation
-        User user = userRepository.findByEmail(reservationDto.userEmail()).orElseThrow(() -> new RecordNotFoundException("User with email " + reservationDto.userEmail() + " not found"));
+        Optional<User> userOpt = userRepository.findByEmail(reservationDto.userEmail());
+        if(!userOpt.isPresent()) {
+            throw new RecordNotFoundException("User with email " + reservationDto.userEmail() + " not found");
+        }
+        User user = userOpt.get();
         if(user.getSubscription().getEndDate().isBefore(LocalDate.now())){
             throw new BusinessException("Subscription has expired.");
         }
-        Set<Book> booksToReserve = reservationDto.reservedIsbn().stream().map(b -> bookRepository.findByIsbn(b).orElseThrow(() -> new RecordNotFoundException("Book with isbn " + b + " not found"))).collect(Collectors.toSet());
+        Set<Book> booksToReserve = new HashSet<>();
+        for (String isbn : reservationDto.reservedIsbn()) {
+            Optional<Book> book = bookRepository.findByIsbn(isbn);
+            if( book.isPresent()) {
+                booksToReserve.add(book.get());
+            } else {
+                throw new RecordNotFoundException("Book with isbn " + isbn + " not found");
+            }
+        }
         if(user.getSubscription().getMaxBookLimit() < user.getSubscription().getNumberOfBooksBorrowed() + booksToReserve.size()) {
             throw new BusinessException("Reservation exceeds book limit of the subscription.");
         }
@@ -96,12 +108,22 @@ public class ReservationService {
     }
 
     public ReservationDto updateReservation(Long id, ReservationDto reservationDto) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow(() ->new RecordNotFoundException("Reservation not found"));
-
+        Optional<Reservation> reservationOpt = reservationRepository.findById(id);
+        if(!reservationOpt.isPresent()) {
+            throw new RecordNotFoundException("Reservation not found");
+        }
+        Reservation reservation = reservationOpt.get();
         reservation.setReturnDate(reservationDto.returnDate());
         reservation.setReservationDate(reservationDto.reservationDate());
 
-        Set<Book> booksToReserve = reservationDto.reservedIsbn().stream().map(b -> bookRepository.findByIsbn(b).orElseThrow(() -> new RecordNotFoundException("Book with isbn " + b+ " not found"))).collect(Collectors.toSet());
+        Set<Book> booksToReserve = new HashSet<>();
+        for (String b : reservationDto.reservedIsbn()) {
+            Optional<Book> book = bookRepository.findByIsbn(b);
+            if(!book.isPresent()) {
+                throw new RecordNotFoundException("Book with isbn " + b + " not found");
+            }
+            booksToReserve.add(book.get());
+        }
         if(reservation.getUser().getSubscription().getMaxBookLimit() < reservation.getUser().getSubscription().getNumberOfBooksBorrowed() + booksToReserve.size()) {
             throw new BusinessException("Reservation exceeds book limit of the subscription.");
         }
@@ -128,7 +150,11 @@ public class ReservationService {
 
     public void returnBooks(Long reservationId) {
         // mark returned
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() ->new RecordNotFoundException("Reservation not found"));
+        Optional<Reservation> reservationOpt = reservationRepository.findById(reservationId);
+        if(!reservationOpt.isPresent()) {
+            throw new RecordNotFoundException("Reservation not found");
+        }
+        Reservation reservation = reservationOpt.get();
         reservation.setIsReturned(Boolean.TRUE);
         // update book count on the book object
         int bookCount =0;

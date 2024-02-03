@@ -69,15 +69,31 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/authors/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/authors").hasAnyRole("ADMIN","USER")
 
+                        // for Books
+                                .requestMatchers(HttpMethod.GET, "books").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "books/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "books").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "books/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "books/{id}").hasRole("ADMIN")
+
+                        // for file upload/download
+                                .requestMatchers(HttpMethod.POST, "single/uploadDb").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/downloadFromDB/{fileName}").hasAnyRole("ADMIN","USER")
+
+                        // for reservation //
+                                .requestMatchers(HttpMethod.GET, "reservations").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "reservations/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "reservations").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "reservations/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "reservations/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "reservations/return-book/{id}").hasRole("ADMIN")
 
 
                         // for roles //
-//                        .requestMatchers(HttpMethod.GET, "/roles").hasRole("ADMIN")
-
+                                .requestMatchers(HttpMethod.GET, "/roles").hasRole("ADMIN")
 
                         // for subscriptions //
-
-//                        .requestMatchers(HttpMethod.GET, "/subscriptions/{subscriptionId}").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.GET, "/subscriptions/{subscriptionId}").hasAnyRole("ADMIN", "USER")
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())

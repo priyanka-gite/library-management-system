@@ -37,12 +37,14 @@ public class UserService {
         return convertUserListToDtoList(user);
     }
 
-//TODO use this method in controller
-    public UserDto getUsersByEmail(String email) {
-        Optional<User> userByEmail = userRepository.findByEmail(email);
-        return convertUserToDto(userByEmail.get());
+    public void deleteUser(String username) {
+        Optional<User> optionalUser = userRepository.findById(username);
+        if (optionalUser.isPresent()) {
+            userRepository.deleteById(username);
+        } else {
+            throw new RecordNotFoundException("User with username: " + username + " not found");
+        }
     }
-
 
     public UserDto addUser(UserDto userDto) {
         Optional<User> existingUser = userRepository.findByEmail(userDto.email());
@@ -70,7 +72,16 @@ public class UserService {
         user.setMobileNumber(userDto.mobileNumber());
         user.setPassword(passwordEncoder.encode(userDto.password()));
         //convert roledDto to roles
-        user.setRoles(userDto.roles().stream().map(r -> roleRepository.findByRoleName(r.roleName()).orElseThrow(() -> new RecordNotFoundException("Invalid role: " + r.roleName() + " specified"))).collect(Collectors.toSet()));
+        Set<Role> set = new HashSet<>();
+        for (RoleDto roleDto : userDto.roles()) {
+            Optional<Role> roleOpt = roleRepository.findByRoleName(roleDto.roleName());
+            if(!roleOpt.isPresent()) {
+                throw new RecordNotFoundException("Invalid role: " + roleDto.roleName() + " specified");
+            }
+            Role role = roleOpt.get();
+            set.add(role);
+        }
+        user.setRoles(set);
         //TODO fix this
         //user.setReservations(userDto.reservations());
         //user.setSubscription(userDto.subscription());

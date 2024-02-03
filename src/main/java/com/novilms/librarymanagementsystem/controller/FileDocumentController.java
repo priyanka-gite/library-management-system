@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.*;
@@ -27,8 +26,6 @@ public class FileDocumentController {
     @PostMapping("single/uploadDb")
     public FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
 
-
-        // next line makes url. example "http://localhost:8080/download/naam.jpg"
         FileDocument fileDocument = databaseService.uploadFileDocument(file);
         String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadFromDB/").path(Objects.requireNonNull(file.getOriginalFilename())).toUriString();
 
@@ -47,27 +44,4 @@ public class FileDocumentController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName=" + document.getFileName()).body(document.getDocFile());
     }
 
-    //    post for multiple uploads to database
-    @PostMapping("/multiple/upload/db")
-    List<FileUploadResponse> multipleUpload(@RequestParam("files") MultipartFile[] files) {
-
-        if (files.length > 7) {
-            throw new RuntimeException("to many files selected");
-        }
-
-        return databaseService.createMultipleUpload(files);
-
-    }
-
-    @GetMapping("zipDownload/db")
-    public void zipDownload(@RequestBody String[] files, HttpServletResponse response) throws IOException {
-
-        databaseService.getZipDownload(files, response);
-
-    }
-
-    @GetMapping("/getAll/db")
-    public Collection<FileDocument> getAllFromDB() {
-        return databaseService.getALlFromDB();
-    }
 }

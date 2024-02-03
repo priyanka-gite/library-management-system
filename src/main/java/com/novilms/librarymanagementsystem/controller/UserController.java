@@ -3,6 +3,8 @@ package com.novilms.librarymanagementsystem.controller;
 
 import com.novilms.librarymanagementsystem.dtos.UserDto;
 import com.novilms.librarymanagementsystem.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -33,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<Object> addUser( @Valid @RequestBody UserDto userDto) {
 
         UserDto dto = userService.addUser(userDto);
 
@@ -42,4 +44,11 @@ public class UserController {
                 path(new StringBuilder().append("/").append(dto.id()).toString()).toUriString());
         return ResponseEntity.created(uri).body(dto);
     }
+
+    @DeleteMapping("/{username}")
+    public ResponseEntity<String> deleteUser(@PathVariable String username) {
+        userService.deleteUser(username);
+        return new ResponseEntity<>("User with username: " + username + " deleted", HttpStatus.OK);
+    }
+
 }

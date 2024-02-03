@@ -9,12 +9,28 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("subscriptions")
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;
+
+    @GetMapping
+    public ResponseEntity<List<SubscriptionDto>> getAllSubscriptions(){
+        return ResponseEntity.ok(subscriptionService.getAllSubscriptions());
+    }
+    @GetMapping("{id}")
+    public ResponseEntity<SubscriptionDto> getAllSubscriptions(@PathVariable Long id){
+        return ResponseEntity.ok(subscriptionService.getSubscriptions(id));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<SubscriptionDto> deleteSubscriptions(@PathVariable Long id){
+        subscriptionService.deleteSubscription(id);
+        return ResponseEntity.noContent().build();
+    }
 
     @PostMapping
     public ResponseEntity<Object> createSubscription(SubscriptionDto subscriptionDto) {

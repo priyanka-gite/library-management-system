@@ -63,10 +63,10 @@ class ReservationServiceTest {
         RecordNotFoundException recordNotFoundException = assertThrows(RecordNotFoundException.class, () -> reservationService.addReservation(reservationDto));
         assertEquals("Book with isbn unknown not found",recordNotFoundException.getMessage());
     }
+
     @Test
     void addReservation_MaxBooksReserved() {
         ReservationDto reservationDto = new ReservationDto(100l, null, null, false, Collections.singleton("unknown"), "email");
-//        ReservationDto reservationDto = new ReservationDto(100l, null, null, false, Collections.singleton(new BookDto(null,null, "unknown","category",0,null,null)), new UserDto(null, "username", "password", null, "email", null, null, null, new SubscriptionDto(100l,null, LocalDate.now().minusDays(1),10,5, SubscriptionType.ABOVE_EIGHTEEN,null)));
         when(userRepository.findByEmail("email")).thenReturn(Optional.of(new User(null,null,null,null,null,null,null,null,new Subscription(null, now().minusDays(10), now().plusDays(1),SubscriptionType.ABOVE_EIGHTEEN,10,10,null))));
         when(bookRepository.findByIsbn("unknown")).thenReturn(Optional.of(new Book()));
         BusinessException businessException = assertThrows(BusinessException.class, () -> reservationService.addReservation(reservationDto));
