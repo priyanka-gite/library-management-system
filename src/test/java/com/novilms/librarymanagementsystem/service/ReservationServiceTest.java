@@ -15,10 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDate.now;
@@ -72,6 +69,7 @@ class ReservationServiceTest {
         BusinessException businessException = assertThrows(BusinessException.class, () -> reservationService.addReservation(reservationDto));
         assertEquals("Reservation exceeds book limit of the subscription.", businessException.getMessage());
     }
+
     @Test
     void addReservation_KidsBookBelowEighteen() {
         ReservationDto reservationDto = new ReservationDto(100l, null, null, false, Collections.singleton("unknown"), "email");
@@ -97,15 +95,18 @@ class ReservationServiceTest {
         ReservationDto reservationDto = new ReservationDto(100l, null, null, false,  Collections.singleton("unknown"), "email");
 //        ReservationDto reservationDto = new ReservationDto(100l, null, null, false, Collections.singleton(new BookDto(null,null, "unknown","category",0,null,null)), new UserDto(null, "username", "password", null, "email", null, null, null, new SubscriptionDto(100l,null, LocalDate.now().minusDays(1),10,5, SubscriptionType.ABOVE_EIGHTEEN,null)));
         when(userRepository.findByEmail("email")).thenReturn(Optional.of(new User(null,null,null,null,null,null,null,null,new Subscription(null, now().minusDays(10), now().plusDays(1),SubscriptionType.BELOW_EIGHTEEN,10,0,null))));
-        when(bookRepository.findByIsbn("unknown")).thenReturn(Optional.of(new Book(100l, null,null,"kids",10,   8,null,null)));
-        reservationService.addReservation(reservationDto);
+        when(bookRepository.findByIsbn("unknown")).thenReturn(Optional.of(new Book(100l, null,null,"kids",10,   8,null,new HashSet<>())));
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(new Reservation(null,null,null,null,Set.of(),new User()));
+        ReservationDto resultDto = reservationService.addReservation(reservationDto);
         verify(reservationRepository).save(any(Reservation.class));
     }
 
     @Test
     void deleteReservation() {
+        Reservation reservation = new Reservation();
+        when(reservationRepository.findById(100L)).thenReturn(Optional.of(reservation));
         reservationService.deleteReservation(100L);
-        verify(reservationRepository).deleteById(100L);
+        verify(reservationRepository).delete(reservation);
     }
 
     @Test
@@ -121,7 +122,7 @@ class ReservationServiceTest {
         LocalDate todayPlus30Days = today.plusDays(30);
         LocalDate todayMinus5Days = today.minusDays(5);
         LocalDate todayPlus25Days = today.plusDays(25);
-        Set<String> isbns = Set.of("isbn1", "isbn2");
+        Set<String> isbns = new HashSet<>(Set.of("isbn1", "isbn2"));
         ReservationDto reservationDto = new ReservationDto(100L, today, todayPlus30Days, false, isbns, null);
         Book book1 = new Book(101L,"isbn1",null,null,10, 5,null,null);
         when(bookRepository.findByIsbn("isbn1")).thenReturn(Optional.of(book1));
@@ -130,7 +131,7 @@ class ReservationServiceTest {
 
         Subscription subscription = new Subscription(100L,null, null, null,10,5,null);
         User user = new User(100L,null,null,null,null,null,null,null,subscription);
-        Reservation reservation = new Reservation(100L, todayMinus5Days, todayPlus25Days, false, Set.of(book1), user);
+        Reservation reservation = new Reservation(100L, todayMinus5Days, todayPlus25Days, false, new HashSet<>(Set.of(book1)), user);
         when(reservationRepository.findById(100L)).thenReturn(Optional.of(reservation));
 
         ReservationDto result = reservationService.updateReservation(100L, reservationDto);
@@ -151,7 +152,7 @@ class ReservationServiceTest {
         Book book2 = new Book(101L,"isbn2",null,null,10, 5,null,null);
         when(bookRepository.findByIsbn("isbn2")).thenReturn(Optional.of(book2));
 
-        Subscription subscription = new Subscription(100L,null, null, null,10,9,null);
+        Subscription subscription = new Subscription(100L,null, null, null,10,10,null);
         User user = new User(100L,null,null,null,null,null,null,null,subscription);
         Reservation reservation = new Reservation(100L, now().minusDays(5), now().plusDays(25), false, Set.of(book1), user);
         when(reservationRepository.findById(100L)).thenReturn(Optional.of(reservation));
@@ -205,11 +206,13 @@ class ReservationServiceTest {
 
     @Test
     void returnBook() {
-        Book book1 = new Book(100L,"isbn1",null,null,10, 8,null,null);
-        Book book2 = new Book(101L,"isbn2",null,null,10, 5,null,null);
+        Book book1 = new Book(100L,"isbn1",null,null,10, 8,null,new HashSet<>());
+        Book book2 = new Book(101L,"isbn2",null,null,10, 5,null,new HashSet<>());
         Subscription subscription = new Subscription(100L,null, null, null,10,9,null);
         User user = new User(100L,null,null,null,null,null,null,null,subscription);
-        Reservation reservation = new Reservation(100L, null, null, false, Set.of(book1, book2), user);
+        Reservation reservation = new Reservation(100L, null, null, false, new HashSet<>(Set.of(book1, book2)), user);
+//        book1.addReservation(reservation);
+//        book2.addReservation(reservation);
         when(reservationRepository.findById(100L)).thenReturn(Optional.of(reservation));
 
         reservationService.returnBooks(100L);

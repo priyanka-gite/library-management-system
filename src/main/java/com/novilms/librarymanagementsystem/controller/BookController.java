@@ -22,20 +22,25 @@ public class BookController {
     private final BookService bookServices;
 
     @GetMapping
-    public ResponseEntity<List<BookDto>> getAllBooks(@RequestParam(value = "title", required = false) Optional<String> title, @RequestParam(value = "book_author", required = false)Optional<Set<Author>> authors) {
-        List<BookDto> dtos;
-        if (title.isEmpty() || authors.isEmpty() ) {
-            dtos = bookServices.getAllBooks();
-        } else {
-            dtos = bookServices.getBookByTitle(title.get());
-        }
-        return ResponseEntity.ok(dtos);
+    public ResponseEntity<List<BookDto>> getAllBooks() {
+        return ResponseEntity.ok(bookServices.getAllBooks());
     }
 
     @GetMapping("{id}")
     public ResponseEntity<BookDto> getBookById(@PathVariable("id") Long id) {
         BookDto bookDto = bookServices.getBookById(id);
         return ResponseEntity.ok(bookDto);
+    }
+
+    @GetMapping(params = {"authorName"})
+    public ResponseEntity<List<BookDto>> getBookByAuthorName(@RequestParam("authorName") String authorName) {
+        List<BookDto> bookDtos = bookServices.getByAuthorName(authorName);
+        return ResponseEntity.ok(bookDtos);
+    }
+
+    @GetMapping(params = {"title"})
+    public ResponseEntity<List<BookDto>> getBookByTitle(@RequestParam(value = "title") String title) {
+        return ResponseEntity.ok(bookServices.getBookByTitle(title));
     }
 
     @PostMapping

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.Set;
 
-public record UserDto(Long id, @NotEmpty(message = "Username cannot be empty ") String username, @NotEmpty(message = "Password cannot be empty ") String password, @NotEmpty(message = "Address cannot be empty ") String address, @NotEmpty(message = "Email cannot be empty ") String email, @NotEmpty(message = "MObile number cannot be empty ") String mobileNumber, @NotEmpty(message = "User roles cannot be empty ") Set<RoleDto> roles,  Set<Long> reservationIds, Long subscriptionId) {
+public record UserDto(Long id, @NotEmpty(message = "Username cannot be empty ") String username, @NotEmpty(message = "Password cannot be empty ") String password, @NotEmpty(message = "Address cannot be empty ") String address, @NotEmpty(message = "Email cannot be empty") String email, @NotEmpty(message = "Mobile number cannot be empty ") String mobileNumber, @NotEmpty(message = "User roles cannot be empty ") Set<RoleDto> roles, Set<Long> reservationIds, Long subscriptionId) {
 
     public UserDto {
         if (username.isEmpty() && password.isEmpty()){

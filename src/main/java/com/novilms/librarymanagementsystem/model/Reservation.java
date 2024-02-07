@@ -24,7 +24,7 @@ public class Reservation {
     @Column(name = "is_returned")
     private  Boolean isReturned;
 
-    @ManyToMany(mappedBy = "reservedBook" )
+    @ManyToMany(mappedBy = "reservedBook")
     private Set<Book> reservedBooks = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

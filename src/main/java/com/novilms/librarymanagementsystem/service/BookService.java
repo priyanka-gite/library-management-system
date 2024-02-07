@@ -1,6 +1,7 @@
 package com.novilms.librarymanagementsystem.service;
 
 import com.novilms.librarymanagementsystem.dtos.BookDto;
+import com.novilms.librarymanagementsystem.exceptions.BusinessException;
 import com.novilms.librarymanagementsystem.exceptions.RecordNotFoundException;
 import com.novilms.librarymanagementsystem.model.Author;
 import com.novilms.librarymanagementsystem.model.Book;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -39,8 +41,10 @@ public class BookService {
     }
 
     public BookDto addBook(BookDto bookDto) {
-        bookRepository.save(convertDtoToBook(bookDto, new Book(), bookDto.id()));
-        return bookDto;
+        if(bookRepository.findByIsbn(bookDto.isbn()).isPresent()){
+            throw new BusinessException("Book with Isbn " +bookDto.isbn()+ " exist already");
+        }
+        return convertBookToDto(bookRepository.save(convertDtoToBook(bookDto, new Book(), bookDto.id())));
     }
 
     public void deleteBook(Long id) {
@@ -48,9 +52,7 @@ public class BookService {
     }
 
     public BookDto updateBook(Long id, BookDto bookDto) {
-        Book updateBook = convertDtoToBook(bookDto, getBook(id), id);
-        bookRepository.save(updateBook);
-        return bookDto;
+        return convertBookToDto(bookRepository.save(convertDtoToBook(bookDto, getBook(id), id)));
     }
 
     private Book getBook(Long id) {
@@ -79,14 +81,19 @@ public class BookService {
         }
         book.setReservedBook(reservations);
         book.setNumberOfCopies(bookDto.numberOfCopies());
+        book.setIsbn(bookDto.isbn());
         return book;
     }
 
+    public List<BookDto> getByAuthorName(String authorName) {
+        List<Book> books = bookRepository.findAllByAuthors_Name(authorName);
+        return convertBookListToDtoList(books);
+    }
 
     public BookDto convertBookToDto(Book book) {
-        return new BookDto(book.getId(),book.getTitle(),book.getIsbn(),book.getCategory(),book.getNumberOfCopies(),null,null);
-
+        return new BookDto(book.getId(),book.getTitle(),book.getIsbn(),book.getCategory(),book.getNumberOfCopies(),book.getNumberOfCopiesBorrowed(),book.getAuthors().stream().map(a ->a.getId()).collect(Collectors.toSet()), book.getReservedBook().stream().map(rb -> rb.getId()).collect(Collectors.toSet()));
     }
+
 
     private List<BookDto> convertBookListToDtoList(List<Book> bookList) {
         List<BookDto> bookDtoList = new ArrayList<>();
@@ -97,5 +104,4 @@ public class BookService {
         }
         return bookDtoList;
     }
-
 }

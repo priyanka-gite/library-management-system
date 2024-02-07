@@ -3,23 +3,32 @@ package com.novilms.librarymanagementsystem.service;
 import com.novilms.librarymanagementsystem.dtos.SubscriptionDto;
 import com.novilms.librarymanagementsystem.exceptions.RecordNotFoundException;
 import com.novilms.librarymanagementsystem.model.Subscription;
+import com.novilms.librarymanagementsystem.model.User;
 import com.novilms.librarymanagementsystem.repository.SubscriptionRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
+@Transactional
 public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
+    private final UserService userService;
+
+    public SubscriptionService(SubscriptionRepository subscriptionRepository, @Lazy UserService userService) {
+        this.subscriptionRepository = subscriptionRepository;
+        this.userService = userService;
+    }
 
     public SubscriptionDto createSubscription(SubscriptionDto subscriptionDto) {
-        subscriptionRepository.save(convertDtoToSubscription(subscriptionDto));
-        return subscriptionDto;
+        return convertSubscriptionToDto(subscriptionRepository.save(convertDtoToSubscription(subscriptionDto)));
     }
+
     public List<SubscriptionDto> getAllSubscriptions(){
         List<Subscription> subscriptions = subscriptionRepository.findAll();
         List<SubscriptionDto> subscriptionDtos = new ArrayList<>();
@@ -40,7 +49,8 @@ public class SubscriptionService {
         subscription.setMaxBookLimit(subscriptionDto.maxBookLimit());
         subscription.setNumberOfBooksBorrowed(subscriptionDto.numberOfBooksBorrowed());
         subscription.setSubscriptionType(subscriptionDto.subscriptionType());
-        subscription.setUser(subscription.getUser());
+        User user = userService.getUser(subscriptionDto.userEmail());
+        user.setSubscription(subscription);
         return subscription;
     }
 
@@ -54,7 +64,7 @@ public class SubscriptionService {
         updateSubscription.setSubscriptionType(subscriptionDto.subscriptionType());
         updateSubscription.setMaxBookLimit(subscriptionDto.maxBookLimit());
         updateSubscription.setNumberOfBooksBorrowed(subscriptionDto.numberOfBooksBorrowed());
-        return subscriptionDto;
+        return convertSubscriptionToDto(updateSubscription);
     }
 
     public SubscriptionDto getSubscriptions(Long id) {

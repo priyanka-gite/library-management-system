@@ -8,6 +8,7 @@ import com.novilms.librarymanagementsystem.repository.BookRepository;
 import com.novilms.librarymanagementsystem.repository.ReserveRepository;
 import com.novilms.librarymanagementsystem.repository.SubscriptionRepository;
 import com.novilms.librarymanagementsystem.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
+@Transactional
 public class ReservationService {
 
     private final ReserveRepository reservationRepository;
@@ -92,19 +94,31 @@ public class ReservationService {
                 throw new BusinessException("Max number of copies already borrowed");
             }
         }
+        Subscription subscription = user.getSubscription();
+        subscription.setNumberOfBooksBorrowed(subscription.getNumberOfBooksBorrowed() + booksToReserve.size());
+        subscriptionRepository.save(subscription);
 
         Reservation reservation = new Reservation();
-        reservation.setReservedBooks(booksToReserve);
+
+        for (Book b : booksToReserve) {
+            b.addReservation(reservation);
+            b.setNumberOfCopiesBorrowed(b.getNumberOfCopiesBorrowed() + 1);
+        }
         reservation.setUser(user);
         reservation.setReservationDate(reservationDto.reservationDate());
         reservation.setReturnDate(reservationDto.returnDate());
         reservation.setIsReturned(Boolean.FALSE);
-        reservationRepository.save(reservation);
-        return reservationDto;
+        return convertReservationToDto(reservationRepository.save(reservation));
     }
 
     public void deleteReservation(Long id) {
-        reservationRepository.deleteById(id);
+        Optional<Reservation> reservationOpt = reservationRepository.findById(id);
+        if(!reservationOpt.isPresent()) {
+            throw new RecordNotFoundException("Reservation with id " +id + " not found");
+        }
+        Reservation reservation = reservationOpt.get();
+        reservation.getReservedBooks().forEach(r -> r.removeReservation(reservation));
+        reservationRepository.delete(reservation);
     }
 
     public ReservationDto updateReservation(Long id, ReservationDto reservationDto) {
@@ -122,7 +136,9 @@ public class ReservationService {
             if(!book.isPresent()) {
                 throw new RecordNotFoundException("Book with isbn " + b + " not found");
             }
-            booksToReserve.add(book.get());
+            if(!reservation.getReservedBooks().contains(book.get())) {
+                booksToReserve.add(book.get());
+            }
         }
         if(reservation.getUser().getSubscription().getMaxBookLimit() < reservation.getUser().getSubscription().getNumberOfBooksBorrowed() + booksToReserve.size()) {
             throw new BusinessException("Reservation exceeds book limit of the subscription.");
@@ -134,12 +150,17 @@ public class ReservationService {
                 }
             }
         }
+
         for(Book book: booksToReserve) {
-            if(book.getNumberOfCopies() < book.getNumberOfCopiesBorrowed() + 1) {
+            if (book.getNumberOfCopies() < book.getNumberOfCopiesBorrowed() + 1) {
                 throw new BusinessException("Max number of copies already borrowed");
             }
         }
-        reservation.setReservedBooks(booksToReserve);
+        Subscription subscription = reservation.getUser().getSubscription();
+        subscription.setNumberOfBooksBorrowed(subscription.getNumberOfBooksBorrowed() + booksToReserve.size());
+        subscriptionRepository.save(subscription);
+
+        reservation.getReservedBooks().addAll(booksToReserve);
         reservationRepository.save(reservation);
         return reservationDto;
     }
@@ -155,11 +176,16 @@ public class ReservationService {
             throw new RecordNotFoundException("Reservation not found");
         }
         Reservation reservation = reservationOpt.get();
+        if(reservation.getIsReturned()) {
+            throw new BusinessException("Books for this reservation already returned");
+        }
         reservation.setIsReturned(Boolean.TRUE);
         // update book count on the book object
         int bookCount =0;
-        for (Book b : reservation.getReservedBooks()) {
+        Set<Book> reservedBooks = new HashSet<>(reservation.getReservedBooks());
+        for (Book b : reservedBooks) {
             b.setNumberOfCopiesBorrowed(b.getNumberOfCopiesBorrowed() - 1);
+            b.removeReservation(reservation);
             bookRepository.save(b);
             bookCount++;
         }

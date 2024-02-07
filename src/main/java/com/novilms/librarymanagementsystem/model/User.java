@@ -33,7 +33,7 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Reservation> reservations;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private Subscription subscription;
 
     public void addReservation(Reservation reservation) {

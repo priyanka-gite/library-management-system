@@ -3,6 +3,7 @@ package com.novilms.librarymanagementsystem.controller;
 
 import com.novilms.librarymanagementsystem.dtos.SubscriptionDto;
 import com.novilms.librarymanagementsystem.service.SubscriptionService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class SubscriptionController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createSubscription(SubscriptionDto subscriptionDto) {
+    public ResponseEntity<Object> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
         SubscriptionDto dto = subscriptionService.createSubscription(subscriptionDto);
         URI uri = URI.create(ServletUriComponentsBuilder.
                 fromCurrentRequest().
@@ -42,7 +43,7 @@ public class SubscriptionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateSubscription(@PathVariable Long id, @RequestBody SubscriptionDto newSubscription) {
+    public ResponseEntity<Object> updateSubscription(@PathVariable Long id, @Valid @RequestBody SubscriptionDto newSubscription) {
         SubscriptionDto dto = subscriptionService.updateSubscription(id, newSubscription);
         return ResponseEntity.ok().body(dto);
     }

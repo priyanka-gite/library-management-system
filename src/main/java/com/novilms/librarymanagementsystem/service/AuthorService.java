@@ -45,8 +45,8 @@ public class AuthorService {
     }
 
     public AuthorDto addAuthor(AuthorDto authorDto){
-        authorRepository.save(convertDtoToAuthor(authorDto));
-        return authorDto;
+        Author author = authorRepository.save(convertDtoToAuthor(authorDto));
+        return convertAuthorToDto(author);
     }
 
     public void deleteAuthor(Long id) {
@@ -106,8 +106,5 @@ public class AuthorService {
         }
         return authorDtoList;
     }
-
-
-
 }
 

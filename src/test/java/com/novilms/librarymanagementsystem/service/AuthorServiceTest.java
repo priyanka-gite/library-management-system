@@ -83,7 +83,7 @@ class AuthorServiceTest {
     void addAuthor() {
         AuthorDto dto = new AuthorDto(100L, "name", "male", "email", Set.of("isbn"));
         when(bookRepository.findByIsbn("isbn")).thenReturn(Optional.of(new Book()));
-
+        when(authorRepository.save(any(Author.class))).thenReturn(new Author());
         authorService.addAuthor(dto);
 
         verify(authorRepository).save(any(Author.class));
@@ -99,7 +99,7 @@ class AuthorServiceTest {
     void updateAuthor_NotFound() {
         when(authorRepository.findById(100L)).thenReturn(Optional.empty());
         RecordNotFoundException recordNotFoundException = assertThrows(RecordNotFoundException.class, () -> authorService.updateAuthor(100L, new AuthorDto(100L, "name", "male", "email", Set.of("isbn"))));
-        assertEquals("Book Not Found",recordNotFoundException.getMessage());
+        assertEquals("Author Not Found",recordNotFoundException.getMessage());
     }
 
     @Test

@@ -24,22 +24,18 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers(@RequestParam(value = "username", required = false) Optional<String> username) {
-        List<UserDto> dtos;
-        if (username.isEmpty()) {
-            dtos = userService.getAllUsers();
-        } else {
-            dtos = userService.getUsersByUsername(username.get());
-        }
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
 
-        return ResponseEntity.ok(dtos);
+    @GetMapping("{email}")
+    public ResponseEntity<UserDto> getByUsersName(@PathVariable(value = "email") String email) {
+        return ResponseEntity.ok(userService.getUsersByEmail(email));
     }
 
     @PostMapping
-    public ResponseEntity<Object> addUser( @Valid @RequestBody UserDto userDto) {
-
+    public ResponseEntity<UserDto> addUser( @Valid @RequestBody UserDto userDto) {
         UserDto dto = userService.addUser(userDto);
-
         URI uri = URI.create(ServletUriComponentsBuilder.
                 fromCurrentRequest().
                 path(new StringBuilder().append("/").append(dto.id()).toString()).toUriString());
@@ -53,7 +49,7 @@ public class UserController {
     }
 
     @PutMapping("{email}")
-    public ResponseEntity<Object> updateReservation(@PathVariable String email, @Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable String email, @Valid @RequestBody UserDto userDto) {
         UserDto dto = userService.updateUser(email, userDto);
         return ResponseEntity.ok().body(dto);
     }
