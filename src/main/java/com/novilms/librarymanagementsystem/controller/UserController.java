@@ -42,10 +42,10 @@ public class UserController {
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @DeleteMapping("/{username}")
-    public ResponseEntity<String> deleteUser(@PathVariable String username) {
-        userService.deleteUser(username);
-        return new ResponseEntity<>("User with username: " + username + " deleted", HttpStatus.OK);
+    @DeleteMapping("/{email}")
+    public ResponseEntity<String> deleteUser(@PathVariable String email) {
+        userService.deleteUser(email);
+        return new ResponseEntity<>("User with email: " + email + " deleted", HttpStatus.OK);
     }
 
     @PutMapping("{email}")

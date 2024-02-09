@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth").permitAll()
                         // for user
                                 .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/users/{email}").hasAnyRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/users/{email}").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.GET, "/users").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/users/{username}").hasAnyRole("ADMIN")
 
@@ -66,7 +66,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PUT,"/author/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST,"/author").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE,"/author/{id}").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/author/{id}").hasRole("ADMIN ")
+                                .requestMatchers(HttpMethod.GET, "/author/{id}").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.GET, "/author").hasAnyRole("ADMIN","USER")
 
                         // for Books
@@ -82,11 +82,11 @@ public class SecurityConfig {
 
                         // for reservation //
                                 .requestMatchers(HttpMethod.GET, "reservations").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "reservations/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "reservations/{id}").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.POST, "reservations").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.DELETE, "reservations/{id}").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.PUT, "reservations/{id}").hasAnyRole("ADMIN", "USER")
-                                .requestMatchers(HttpMethod.PUT, "reservations/return-book/{id}").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "reservations/return-book/{id}").hasAnyRole("ADMIN", "USER")
 
                         // for roles //
                                 .requestMatchers(HttpMethod.GET, "/roles").hasRole("ADMIN")
