@@ -45,7 +45,7 @@ public class UserController {
     @DeleteMapping("/{email}")
     public ResponseEntity<String> deleteUser(@PathVariable String email) {
         userService.deleteUser(email);
-        return new ResponseEntity<>("User with email: " + email + " deleted", HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{email}")

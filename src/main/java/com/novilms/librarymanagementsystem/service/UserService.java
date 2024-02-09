@@ -45,7 +45,7 @@ public class UserService {
         if (!optionalUser.isPresent()) {
             throw new RecordNotFoundException("User with username: " + email + " not found");
         }
-        userRepository.deleteById(email);
+        userRepository.delete(optionalUser.get());
     }
 
     public UserDto addUser(UserDto userDto) {

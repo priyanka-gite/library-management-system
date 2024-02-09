@@ -81,6 +81,12 @@ public class SubscriptionService {
     }
 
     public void deleteSubscription(Long id) {
-        subscriptionRepository.deleteById(id);
+        Optional<Subscription> subscription = subscriptionRepository.findById(id);
+        if(!subscription.isPresent()) {
+            throw new RecordNotFoundException("Could not find subscription with id "+ id);
+        }
+        Subscription subscription1 = subscription.get();
+        subscription1.getUser().setSubscription(null);
+        subscriptionRepository.delete(subscription1);
     }
 }

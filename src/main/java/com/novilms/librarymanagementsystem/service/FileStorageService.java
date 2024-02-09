@@ -57,4 +57,37 @@ public class FileStorageService {
         docFileRepository.save(fileDocument);
         return fileDocument;
     }
+
+    public Resource downLoadFile(String fileName) {
+
+        Path path = Paths.get(fileStorageLocation).toAbsolutePath().resolve(fileName);
+        Resource resource;
+        try {
+            resource = new UrlResource(path.toUri());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("File cannot be found", e);
+        }
+        if (resource.exists() && resource.isReadable()) {
+            return resource;
+        } else {
+            throw new RuntimeException("This file doesn't exist or is unreadable.");
+        }
+    }
+
+    public void createZipEntry(String file, ZipOutputStream zos) throws IOException {
+
+        Resource resource = downLoadFile(file);
+        ZipEntry zipEntry = new ZipEntry(Objects.requireNonNull(resource.getFilename()));
+        try {
+            zipEntry.setSize(resource.contentLength());
+            zos.putNextEntry(zipEntry);
+
+            StreamUtils.copy(resource.getInputStream(), zos);
+
+            zos.closeEntry();
+        } catch (IOException e) {
+            System.out.println("some exception while zipping");
+        }
+
+    }
 }
