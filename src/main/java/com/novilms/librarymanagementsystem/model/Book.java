@@ -1,72 +1,71 @@
 package com.novilms.librarymanagementsystem.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+@Data
 @Entity
 @Table(name = "books")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Book {
     @Id
     @GeneratedValue
-    Long id;
-    @Column(name = "title")
-    String title;
-    @Column(name = "author")
-    String author;
+    private Long id;
     @Column(name = "isbn" )
-    int isbn;
-    @Column(name = "publication")
-    String publication;
+    private String isbn;
+    @Column(name = "title")
+    private String title;
+    @Column(name = "category")
+    private String category;
+    @Column(name = "number_of_copies")
+    private int numberOfCopies;
+    @Column(name = "number_of_copies_borrow")
+    private int numberOfCopiesBorrowed;
 
-    public String getTitle() {
-        return title;
+    @ManyToMany
+    @JoinTable(name = "book_author", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private Set<Author> authors =new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "book_reservation", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "reservation_id"))
+    private Set<Reservation> reservedBook = new HashSet<>();
+
+    public void addAuthor(Author author) {
+        authors.add(author);
+        author.getPublishedBooks().add(this);
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void removeAuthor(Author author) {
+        authors.remove(author);
+        author.getPublishedBooks().remove(this);
     }
 
-    public String getAuthor() {
-        return author;
+    public void addReservation(Reservation reservation) {
+        reservedBook.add(reservation);
+        reservation.getReservedBooks().add(this);
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void removeReservation(Reservation reservation) {
+        reservedBook.remove(reservation);
+        reservation.getReservedBooks().remove(this);
     }
 
-    public int getIsbn() {
-        return isbn;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        return isbn != null && isbn.equals(((Book) o).getIsbn());
     }
 
-    public void setIsbn(int isbn) {
-        this.isbn = isbn;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
-
-    public String getPublication() {
-        return publication;
-    }
-
-    public void setPublication(String publication) {
-        this.publication = publication;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Book(Long id, String title, String author, String publication, int isbn) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.publication = publication;
-        this.isbn = isbn;
-    }
-
-    public Book() {
-
-    }
-
 }
